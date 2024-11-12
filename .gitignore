@@ -1,0 +1,12 @@
+data/*
+!data/
+!.gitignore
+data_bak/*
+*.log
+result.val
+result/*
+!result
+.vscode
+.coverage
+visualization_results/
+**/*.pyc

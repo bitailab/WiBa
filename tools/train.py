@@ -9,9 +9,12 @@ import warnings
 import mmcv
 import torch
 import torch.distributed as dist
-from mmcv import Config, DictAction
-from mmcv.runner import get_dist_info, init_dist
-from mmcv.utils import get_git_hash
+#from mmcv import Config, DictAction
+from mmengine import Config, DictAction
+#from mmcv.runner import get_dist_info, init_dist
+from mmengine.dist import get_dist_info, init_dist
+#from mmcv.utils import get_git_hash
+from mmengine.utils import get_git_hash
 from mmdet.utils import (collect_env, get_device, get_root_logger,
                          replace_cfg_vals, setup_multi_processes,
                          update_data_root)

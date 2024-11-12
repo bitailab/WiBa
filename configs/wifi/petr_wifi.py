@@ -1,5 +1,5 @@
 dataset_type = 'opera.WifiPoseDataset'
-data_root = '/home/yankangwei/opera-main/data/wifipose'
+data_root = '/data/repos/Person-in-WiFi-3D-repo/data'
 train_pipeline = [
     dict(
         type='opera.DefaultFormatBundle',
@@ -23,10 +23,13 @@ test_pipeline = [
 ]
 data = dict(
     samples_per_gpu=32,
-    workers_per_gpu=2,
+    workers_per_gpu=12,
+    pin_memory=True,
+    persistent_workers=True,  # 保持worker进程
+    prefetch_factor=3,   # 预取因子
     train=dict(
         type='opera.WifiPoseDataset',
-        dataset_root='/home/yankangwei/opera-main/data/wifipose/train_data',
+        dataset_root='/data/repos/Person-in-WiFi-3D-repo/data/train_data',
         pipeline=[
             dict(
                 type='opera.DefaultFormatBundle',
@@ -38,10 +41,11 @@ data = dict(
                 ],
                 meta_keys=[])
         ],
-        mode='train'),
+        mode='train'
+    ),
     val=dict(
         type='opera.WifiPoseDataset',
-        dataset_root='/home/yankangwei/opera-main/data/wifipose/test_data',
+        dataset_root='/data/repos/Person-in-WiFi-3D-repo/data/val_data',
         pipeline=[
             dict(
                 type='mmdet.MultiScaleFlipAug',
@@ -54,10 +58,11 @@ data = dict(
                     dict(type='mmdet.Collect', keys=['img'], meta_keys=[])
                 ])
         ],
-        mode='test'),
+        mode='val'
+    ),
     test=dict(
         type='opera.WifiPoseDataset',
-        dataset_root='/home/yankangwei/opera-main/data/wifipose/test_data',
+        dataset_root='/data/repos/Person-in-WiFi-3D-repo/data/test_data',
         pipeline=[
             dict(
                 type='mmdet.MultiScaleFlipAug',
@@ -70,9 +75,11 @@ data = dict(
                     dict(type='mmdet.Collect', keys=['img'], meta_keys=[])
                 ])
         ],
-        mode='test'))
-evaluation = dict(interval=1, metric='mpjpe')
-checkpoint_config = dict(interval=1, max_keep_ckpts=20)
+        mode='test'
+    )
+)
+evaluation = dict(interval=10, metric='mpjpe')
+checkpoint_config = dict(interval=5, max_keep_ckpts=20)
 log_config = dict(interval=50, hooks=[dict(type='TextLoggerHook')])
 custom_hooks = [dict(type='NumClassCheckHook')]
 dist_params = dict(backend='nccl')
@@ -210,6 +217,6 @@ optimizer_config = dict(grad_clip=dict(max_norm=0.1, norm_type=2))
 lr_config = dict(policy='step', step=[400])
 runner = dict(type='EpochBasedRunner', max_epochs=450)
 find_unused_parameters = True
-work_dir = '/home/yankangwei/opera-main/result/wifipose'
+work_dir = '/data/repos/Person-in-WiFi-3D-repo/result'
 auto_resume = False
 gpu_ids = range(0, 3)
