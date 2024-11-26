@@ -10,3 +10,5 @@ result/*
 .coverage
 visualization_results/
 **/*.pyc
+data_single_antenna/
+result_multi_antenna/
